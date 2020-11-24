@@ -1,22 +1,27 @@
 import Layout from "../components/Layout";
-import { optionalAuth } from "../utils/ssr";
+import { getSession } from '../utils/session';
 
-export const getServerSideProps = optionalAuth;
+export async function getServerSideProps(context) {
+  const session = await getSession(context.req, context.res);
+
+  return {
+    props: {
+      query: context.query,
+      session: session
+    }
+  }
+}
 
 function HomePage(props) {
-  const user = props.user;
-
   return (
-    <Layout user={user}>
-      {user ? (
+    <>
+      <Layout session={props.session} alert={props.query?.error}>
         <div>
-          You're logged in! Here's what the server knows about you:
-          <pre>{JSON.stringify(user, null, "\t")}</pre>
+          Here's what the server knows about you:
+          <pre>{JSON.stringify(props.session, null, "\t")}</pre>
         </div>
-      ) : (
-        <div>You're not logged in!</div>
-      )}
-    </Layout>
+      </Layout>
+    </>
   );
 }
 

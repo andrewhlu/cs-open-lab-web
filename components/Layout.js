@@ -1,15 +1,21 @@
-import Container from "react-bootstrap/Container";
-import AppNavbar from "./AppNavbar";
-import AppFooter from "./AppFooter";
+import { Container, Row } from "react-bootstrap";
+import Header from "./Header";
+import UCSB from "./UCSB";
+import Discord from "./Discord";
+import JoinServer from "./JoinServer";
 
 function Layout(props) {
-  const user = props.user;
-
   return (
     <>
-      <AppNavbar user={user} />
-      <Container>{props.children}</Container>
-      <AppFooter />
+      <Container>
+        <Header alert={props.alert}></Header>
+        <Row style={{ padding: "0.5em" }}>
+          <UCSB session={props.session}></UCSB>
+          <Discord session={props.session}></Discord>
+          <JoinServer session={props.session}></JoinServer>
+        </Row>
+        {props.children}
+      </Container>
     </>
   );
 }

@@ -24,11 +24,14 @@
     "bootstrap": "^4.4.1",
     "dotenv": "^8.2.0",
     "isomorphic-unfetch": "^3.0.0",
+    "mongodb": "^3.6.3",
     "next": "9.3.2",
+    "next-absolute-url": "^1.2.2",
     "react": "16.13.1",
     "react-bootstrap": "^1.0.0",
     "react-dom": "16.13.1",
-    "swr": "^0.1.18"
+    "swr": "^0.1.18",
+    "xml-js": "^1.6.11"
   },
   "devDependencies": {
     "@rckeller/cypress-unfetch": "^1.0.1",
