@@ -38,7 +38,7 @@ export async function getSession(req, res) {
         sessionCookie = result.insertedId;
     }
 
-    res.setHeader("Set-Cookie", `SessionId=${sessionCookie}; Expires=${expiryDate.toUTCString()}; HttpOnly; SameSite;`);
+    res.setHeader("Set-Cookie", `SessionId=${sessionCookie}; Path=/; Expires=${expiryDate.toUTCString()}; HttpOnly; SameSite;`);
 
     return serializeDocument(session);
 }
