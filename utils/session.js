@@ -1,16 +1,22 @@
 import { ObjectId } from "mongodb";
 import { initDatabase, serializeDocument } from "./mongodb";
 import { getSessionUser } from "./user";
+import absoluteUrl from 'next-absolute-url';
 
 export async function getSession(req, res) {
+    const { protocol, host } = absoluteUrl(req, '');
     const client = await initDatabase();
     const sessions = client.collection("sessions");
 
-    let sessionCookie = req.headers.cookie?.substr(10);
-    let session;
-
     let expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 1);
+
+    let sessionCookie = null;
+    let session = null;
+
+    if (req.headers.cookie?.indexOf("SessionId") >= 0) {
+        sessionCookie = req.headers.cookie?.substr(req.headers.cookie?.indexOf("SessionId") + 10, 24);
+    }
 
     if (sessionCookie) {
         console.log(`Session ID is present: ${sessionCookie}`);

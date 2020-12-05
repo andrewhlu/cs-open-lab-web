@@ -11,7 +11,7 @@ function UCSB(props) {
                     <Card.Body>
                         <Card.Text>You are signed in as <span className="font-weight-bold">{props.session.user.netId}</span>.</Card.Text>
                         <Link href="/api/auth/logout" passHref={true}>
-                            <Button variant="danger" style={{ width: "90%"}}>Sign out</Button>
+                            <Button variant="danger" style={{ width: "90%"}}>Sign out of UCSB</Button>
                         </Link>
                     </Card.Body>
                 ) : (

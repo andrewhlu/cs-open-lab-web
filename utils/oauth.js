@@ -5,18 +5,6 @@ import { getSessionUser } from "./user";
 import absoluteUrl from 'next-absolute-url';
 
 const contexts = {
-    // google: {
-    //     authUri: "https://accounts.google.com/o/oauth2/v2/auth",
-    //     tokenUri: "https://oauth2.googleapis.com/token",
-    //     clientId: config.GOOGLE_CLIENT_ID,
-    //     clientSecret: config.GOOGLE_CLIENT_SECRET,
-    //     scopes: "https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile",
-    //     jsonEncodedBody: true,
-    //     tokenAuthInBody: true,
-    //     additionalParams: {
-    //         include_granted_scopes: true
-    //     },
-    // },
     discord: {
         authUri: "https://discord.com/api/oauth2/authorize",
         tokenUri: "https://discord.com/api/oauth2/token",
@@ -24,6 +12,14 @@ const contexts = {
         clientSecret: config.DISCORD_CLIENT_SECRET,
         scopes: "email identify guilds guilds.join",
         tokenAuthInBody: true,
+    },
+    bot: {
+        authUri: "https://discord.com/api/oauth2/authorize",
+        clientId: config.DISCORD_CLIENT_ID,
+        scopes: "bot",
+        additionalParams: {
+            permissions: config.DISCORD_BOT_PERMISSION,
+        },
     },
 };
 

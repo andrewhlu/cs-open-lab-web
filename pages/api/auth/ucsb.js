@@ -3,7 +3,7 @@ import absoluteUrl from 'next-absolute-url';
 
 export default async function startAuth(req, res) {
     let sessionCookie;
-    if (req.cookies && req.cookies.SessionId) {
+    if (req?.cookies?.SessionId) {
         sessionCookie = req.cookies.SessionId;
 
         let session = await getSessionUser(sessionCookie);

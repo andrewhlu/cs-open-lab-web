@@ -3,7 +3,7 @@ import { startAuth } from "../../../utils/oauth";
 export default async function(req, res) {
     const { context } = req.query;
 
-    if (req.cookies && req.cookies.SessionId) {
+    if (req?.cookies?.SessionId) {
         startAuth(context, req, res, req.cookies.SessionId)
     } else {
         // A session ID is not present

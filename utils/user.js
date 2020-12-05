@@ -54,3 +54,34 @@ export async function createUser(user) {
 
     return users.insertOne(user);
 }
+
+export async function getUserFromDiscordId(discordId) {
+    const client = await initDatabase();
+    const users = client.collection("users");
+
+    return users.findOne({
+        discord: {
+            user: {
+                id: discordId
+            }
+        }
+    });
+}
+
+export async function addDiscordToUser(uid, user, refreshToken) {
+    const client = await initDatabase();
+    const sessions = client.collection("users");
+
+    const update = {
+        $set: {
+            discord: {
+                user: user,
+                refreshToken: refreshToken
+            }
+        }
+    }
+
+    return await sessions.updateOne({ 
+        _id: ObjectId(uid)
+    }, update);
+}

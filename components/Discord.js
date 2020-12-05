@@ -1,7 +1,11 @@
-import { Button, Card, Col } from "react-bootstrap";
+import { Button, Card, Col, Image } from "react-bootstrap";
 import Link from "next/link";
 
 function Discord(props) {
+    const getImageUrl = (discord) => {
+        return `https://cdn.discordapp.com/avatars/${discord?.user?.id}/${discord?.user?.avatar}.png?size=64`;
+    }
+
     return (
         <Col>
             <Card className="text-center">
@@ -9,9 +13,12 @@ function Discord(props) {
                 
                 {props.session?.user?.discord ? (
                     <Card.Body>
-                        <Card.Text>You are signed in as <span className="font-weight-bold">{props.session.user.netId}</span>.</Card.Text>
-                        <Link href="/api/auth/logout" passHref={true}>
-                            <Button variant="danger" style={{ width: "90%"}}>Sign out</Button>
+                        <Image src={getImageUrl(props.session.user.discord)} roundedCircle style={{ padding: "10px" }} />
+                        <Card.Text>
+                            You are signed in as <span className="font-weight-bold">{props.session.user.discord.user.username}</span>#{props.session.user.discord.user.discriminator}.
+                        </Card.Text>
+                        <Link href="#" passHref={true}>
+                            <Button variant="danger" style={{ width: "90%"}}>Unlink Discord</Button>
                         </Link>
                     </Card.Body>
                 ) : (

@@ -1,25 +1,74 @@
+import { getSessionUser, addDiscordToUser, getUserFromDiscordId } from "../../../../utils/user";
 import { callbackAuth } from "../../../../utils/oauth";
+import { fetch } from "../../../../utils/fetch";
 
 export default async function(req, res) {
-    let result;
-    
-    try {
-        result = await callbackAuth("discord", req);
+    const baseUrl = "https://discord.com/api";
 
-        console.log(result);
+    try {
+        // Check if a session cookie is present
+        if (req?.cookies?.SessionId === undefined) {
+            throw "No session ID is present";
+        }
+
+        const sessionCookie = req.cookies.SessionId;
+
+        // Get current session user
+        let session = await getSessionUser(sessionCookie);
+        if (!session || session[0]?.uid === undefined) {
+            throw "Invalid session data";
+        }
+
+        // Finish the OAuth flow
+        const oauthResult = await callbackAuth("discord", req);
+        console.log(oauthResult);
+
+        if (oauthResult?.error) {
+            // OAuth failed, redirect with the error message
+            throw oauthResult?.error_description;
+        }
+
+        // Get user info from Discord
+        const userUrl = `${baseUrl}/users/@me`;
+        const userReqOptions = {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${oauthResult.access_token}`
+            }
+        }
+
+        const discordUser = await fetch(userUrl, userReqOptions);
+        console.log(discordUser);
+
+        if (discordUser?.error) {
+            // Request to get user failed, redirect with the error message
+            throw discordUser?.error_description;
+        }
+
+        // Check if this Discord account is already being used
+        const userIfExists = await getUserFromDiscordId(discordUser.id);
+        if (userIfExists !== null) {
+            // This Discord account is already being used, throw an error
+            throw "This Discord account is already in use by another user";
+        }
+
+        console.log("New user");
+
+        await addDiscordToUser(session[0].uid, discordUser, oauthResult.refresh_token);
+
+        // const url = `${baseUrl}/guilds/${config.DISCORD_GUILD_ID}/members/${}`
+        // const response = await fetch()
+
         res.writeHead(302, {
             'Location': '/'
-            //add other headers here...
         });
         res.end();
-
-        // res.statusCode = 200;
-        // res.setHeader("Content-Type", "application/json");
-        // res.end(JSON.stringify(result));
     }
     catch (error) {
-        res.statusCode = 400;
-        res.setHeader("Content-Type", "application/json");
-        res.end(JSON.stringify(error));
+        console.log(error);
+        res.writeHead(302, {
+            'Location': `/?error=An error occurred: ${error}`
+        });
+        res.end();
     }
 }
