@@ -27,7 +27,7 @@ export async function getSession(req, res) {
         // Update user's Discord information (including access token)
         if (session?.discordAccessToken === undefined && session?.user?.discord?.refreshToken !== undefined) {
             try {
-                session.user.discord = updateDiscordUser(sessionCookie, session.uid, session.user.discord.refreshToken);
+                session.user.discord = await updateDiscordUser(sessionCookie, session.uid, session.user.discord.refreshToken);
             } catch(error) {
                 console.log(error);
             }

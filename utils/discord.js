@@ -21,7 +21,6 @@ export async function updateDiscordUser(sessionCookie, uid, refreshToken) {
     }
 
     const discordUser = await fetch(userUrl, userReqOptions);
-    console.log(discordUser);
 
     if (discordUser?.error) {
         // Request to get user failed, redirect with the error message
@@ -33,4 +32,6 @@ export async function updateDiscordUser(sessionCookie, uid, refreshToken) {
 
     // Store Discord access token in session
     await addDiscordAccessTokenToSession(oauthResult.access_token, sessionCookie);
+
+    return discordUser;
 }
