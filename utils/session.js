@@ -1,6 +1,7 @@
 import { ObjectId } from "mongodb";
 import { initDatabase, serializeDocument } from "./mongodb";
 import { getSessionUser } from "./user";
+import { updateDiscordUser } from "./discord";
 import absoluteUrl from 'next-absolute-url';
 
 export async function getSession(req, res) {
@@ -21,8 +22,16 @@ export async function getSession(req, res) {
     if (sessionCookie) {
         console.log(`Session ID is present: ${sessionCookie}`);
 
-        const result = await getSessionUser(sessionCookie);
-        session = result[0];
+        session = await getSessionUser(sessionCookie);
+
+        // Update user's Discord information (including access token)
+        if (session?.discordAccessToken === undefined && session?.user?.discord?.refreshToken !== undefined) {
+            try {
+                session.user.discord = updateDiscordUser(sessionCookie, session.uid, session.user.discord.refreshToken);
+            } catch(error) {
+                console.log(error);
+            }
+        }
 
         if (session.expires < Date.now()) {
             // This session has expired, delete it
@@ -71,4 +80,19 @@ export async function deleteSession(sessionCookie) {
     return await sessions.deleteOne({
         _id: ObjectId(sessionCookie)
     });
+}
+
+export async function addDiscordAccessTokenToSession(accessToken, sessionCookie) {
+    const client = await initDatabase();
+    const sessions = client.collection("sessions");
+
+    const update = {
+        $set: {
+            discordAccessToken: accessToken
+        }
+    }
+
+    return await sessions.updateOne({ 
+        _id: ObjectId(sessionCookie)
+    }, update);
 }

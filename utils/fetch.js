@@ -12,6 +12,12 @@ export async function fetchXml(url, options) {
   return response.text();
 }
 
+export async function fetchStatus(url, options) {
+  const response = await unfetch(url, options);
+
+  return response.status;
+}
+
 export async function fetchWithToken(url, token, options) {
   return fetch(url, {
     ...options,

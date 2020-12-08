@@ -3,7 +3,11 @@ import Link from "next/link";
 
 function Discord(props) {
     const getImageUrl = (discord) => {
-        return `https://cdn.discordapp.com/avatars/${discord?.user?.id}/${discord?.user?.avatar}.png?size=64`;
+        if (discord?.user?.avatar === null) {
+            return `https://cdn.discordapp.com/embed/avatars/${discord?.user?.discriminator % 5}.png?size=64`
+        } else {
+            return `https://cdn.discordapp.com/avatars/${discord?.user?.id}/${discord?.user?.avatar}.png?size=64`;
+        }
     }
 
     return (
@@ -13,13 +17,11 @@ function Discord(props) {
                 
                 {props.session?.user?.discord ? (
                     <Card.Body>
-                        <Image src={getImageUrl(props.session.user.discord)} roundedCircle style={{ padding: "10px" }} />
+                        <Image src={getImageUrl(props.session.user.discord)} roundedCircle style={{ margin: "10px", height: "64px" }} />
                         <Card.Text>
                             You are signed in as <span className="font-weight-bold">{props.session.user.discord.user.username}</span>#{props.session.user.discord.user.discriminator}.
                         </Card.Text>
-                        <Link href="#" passHref={true}>
-                            <Button variant="danger" style={{ width: "90%"}}>Unlink Discord</Button>
-                        </Link>
+                        <Button disabled variant="danger" style={{ width: "90%"}}>Unlink Discord</Button>
                     </Card.Body>
                 ) : (
                     <Card.Body>

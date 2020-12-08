@@ -8,8 +8,8 @@ function Header(props) {
           <h1>CS Open Lab Concept</h1>
           <h5>The perks of CS Open Lab in Phelps 3525 and 3526, now online!</h5>
         </div>
-        {props.alert ? (
-          <Alert variant="danger">{props.alert}</Alert>
+        {props.alert.content ? (
+          <Alert variant={props.alert.variant}>{props.alert.content}</Alert>
         ) : 
           <></>
         }

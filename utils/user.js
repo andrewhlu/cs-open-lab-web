@@ -27,7 +27,8 @@ export async function getSessionUser(sessionCookie) {
         }
     ];
 
-    return sessions.aggregate(agg).toArray();
+    const result = await sessions.aggregate(agg).toArray();
+    return result[0];
 }
 
 export async function getUserFromUid(uid) {
@@ -78,6 +79,22 @@ export async function addDiscordToUser(uid, user, refreshToken) {
                 user: user,
                 refreshToken: refreshToken
             }
+        }
+    }
+
+    return await sessions.updateOne({ 
+        _id: ObjectId(uid)
+    }, update);
+}
+
+export async function addFirstLastName(uid, fname, lname) {
+    const client = await initDatabase();
+    const sessions = client.collection("users");
+
+    const update = {
+        $set: {
+            fname: fname,
+            lname: lname
         }
     }
 

@@ -1,4 +1,5 @@
 import { getSessionUser, addDiscordToUser, getUserFromDiscordId } from "../../../../utils/user";
+import { addDiscordAccessTokenToSession } from "../../../../utils/session";
 import { callbackAuth } from "../../../../utils/oauth";
 import { fetch } from "../../../../utils/fetch";
 
@@ -15,7 +16,7 @@ export default async function(req, res) {
 
         // Get current session user
         let session = await getSessionUser(sessionCookie);
-        if (!session || session[0]?.uid === undefined) {
+        if (!session || session?.uid === undefined) {
             throw "Invalid session data";
         }
 
@@ -52,9 +53,11 @@ export default async function(req, res) {
             throw "This Discord account is already in use by another user";
         }
 
-        console.log("New user");
+        // Store Discord user and refresh token
+        await addDiscordToUser(session.uid, discordUser, oauthResult.refresh_token);
 
-        await addDiscordToUser(session[0].uid, discordUser, oauthResult.refresh_token);
+        // Store Discord access token in session
+        await addDiscordAccessTokenToSession(oauthResult.access_token, sessionCookie);
 
         // const url = `${baseUrl}/guilds/${config.DISCORD_GUILD_ID}/members/${}`
         // const response = await fetch()
