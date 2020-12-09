@@ -1,15 +1,16 @@
 import { addDiscordToUser } from "./user";
 import { addDiscordAccessTokenToSession } from "./session";
 import { refreshAuthToken } from "./oauth";
+import { fetch } from "./fetch";
 
-export async function updateDiscordUser(sessionCookie, uid, refreshToken) {
-    const oauthResult = await refreshAuthToken("discord", refreshToken);
+export async function updateDiscordUser(req, sessionCookie, uid, refreshToken) {
+    const baseUrl = "https://discord.com/api";
+
+    const oauthResult = await refreshAuthToken("discord", req, refreshToken);
     if (oauthResult?.error) {
         // OAuth failed, redirect with the error message
         throw oauthResult?.error_description;
     }
-
-    accessToken = oauthResult.access_token;
 
     // Get user info from Discord
     const userUrl = `${baseUrl}/users/@me`;

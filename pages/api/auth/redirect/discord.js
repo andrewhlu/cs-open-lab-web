@@ -22,7 +22,6 @@ export default async function(req, res) {
 
         // Finish the OAuth flow
         const oauthResult = await callbackAuth("discord", req);
-        console.log(oauthResult);
 
         if (oauthResult?.error) {
             // OAuth failed, redirect with the error message
@@ -39,7 +38,6 @@ export default async function(req, res) {
         }
 
         const discordUser = await fetch(userUrl, userReqOptions);
-        console.log(discordUser);
 
         if (discordUser?.error) {
             // Request to get user failed, redirect with the error message
@@ -58,9 +56,6 @@ export default async function(req, res) {
 
         // Store Discord access token in session
         await addDiscordAccessTokenToSession(oauthResult.access_token, sessionCookie);
-
-        // const url = `${baseUrl}/guilds/${config.DISCORD_GUILD_ID}/members/${}`
-        // const response = await fetch()
 
         res.writeHead(302, {
             'Location': '/'

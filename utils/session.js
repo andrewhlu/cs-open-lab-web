@@ -2,10 +2,8 @@ import { ObjectId } from "mongodb";
 import { initDatabase, serializeDocument } from "./mongodb";
 import { getSessionUser } from "./user";
 import { updateDiscordUser } from "./discord";
-import absoluteUrl from 'next-absolute-url';
 
 export async function getSession(req, res) {
-    const { protocol, host } = absoluteUrl(req, '');
     const client = await initDatabase();
     const sessions = client.collection("sessions");
 
@@ -27,7 +25,7 @@ export async function getSession(req, res) {
         // Update user's Discord information (including access token)
         if (session?.discordAccessToken === undefined && session?.user?.discord?.refreshToken !== undefined) {
             try {
-                session.user.discord = await updateDiscordUser(sessionCookie, session.uid, session.user.discord.refreshToken);
+                session.user.discord.user = await updateDiscordUser(req, sessionCookie, session.uid, session.user.discord.refreshToken);
             } catch(error) {
                 console.log(error);
             }

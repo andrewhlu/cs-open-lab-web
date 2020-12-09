@@ -28,9 +28,6 @@ export default async function completeAuth(req, res) {
                     const createResponse = await createUser(response.user);
                     databaseUser = response.user;
                     databaseUser._id = createResponse.insertedId;
-
-                    console.log("Database user");
-                    
                 }
 
                 // Attach user ID to session
