@@ -40,7 +40,7 @@ function JoinServer(props) {
 
     return (
         <Col>
-            <Card className="text-center">
+            <Card className="text-center" style={{ marginBottom: "0.5em" }}>
                 <Card.Header as="h5">Step 3: Join the server!</Card.Header>
 
                 <Card.Body>

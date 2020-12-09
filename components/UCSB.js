@@ -4,7 +4,7 @@ import Link from "next/link";
 function UCSB(props) {
     return (
         <Col>
-            <Card className="text-center">
+            <Card className="text-center" style={{ marginBottom: "0.5em" }}>
                 <Card.Header as="h5">Step 1: Sign in to UCSB</Card.Header>
                 
                 {props.session?.uid ? (

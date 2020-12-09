@@ -12,7 +12,7 @@ function Discord(props) {
 
     return (
         <Col>
-            <Card className="text-center">
+            <Card className="text-center" style={{ marginBottom: "0.5em" }}>
                 <Card.Header as="h5">Step 2: Link your Discord</Card.Header>
                 
                 {props.session?.user?.discord ? (

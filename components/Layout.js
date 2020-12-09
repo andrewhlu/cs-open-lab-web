@@ -15,7 +15,7 @@ function Layout(props) {
     <>
       <Container>
         <Header alert={alert}></Header>
-        <Row style={{ padding: "0.5em" }}>
+        <Row xs={1} lg={3} style={{ padding: "0.5em" }}>
           <UCSB session={props.session}></UCSB>
           <Discord session={props.session}></Discord>
           <JoinServer session={props.session} setAlert={setAlert}></JoinServer>
