@@ -34,7 +34,7 @@ export async function getSession(req, res) {
             }
         }
 
-        if (session.expires < Date.now()) {
+        if (session?.expires < Date.now()) {
             // This session has expired, delete it
             console.log("Expired session");
             await deleteSession(session._id);
