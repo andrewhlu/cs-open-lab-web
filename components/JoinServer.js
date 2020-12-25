@@ -6,7 +6,8 @@ import Link from "next/link";
 function JoinServer(props) {
     const [name, setName] = useState({
         fname: props.session?.user?.fname || "",
-        lname: props.session?.user?.lname || ""
+        lname: props.session?.user?.lname || "",
+        pronouns: props.session?.user?.pronouns || ""
     });
 
     const handleOnSubmit = async (e) => {
@@ -47,12 +48,20 @@ function JoinServer(props) {
                     <Card.Text>By joining this server, you agree to the rules posted below and in #rules.</Card.Text>
                     {props.session?.user?.discord ? (
                         <>
-                            <Card.Text>Your nickname in the server will be changed to your name, as entered below.</Card.Text>
+                            <Card.Text>Please enter your name and optionally add your pronouns.</Card.Text>
                             <Form onSubmit={handleOnSubmit}>
                                 <Form.Group>
                                     <Form.Control type="text" placeholder="First Name" value={name.fname} onChange={e => setName({ ...name, fname: e.target.value })}></Form.Control>
                                     <Form.Control type="text" placeholder="Last Name" value={name.lname} onChange={e => setName({ ...name, lname: e.target.value })}></Form.Control>
+                                    <Form.Control type="text" placeholder="Pronouns" value={name.pronouns} onChange={e => setName({ ...name, pronouns: e.target.value })}></Form.Control>
                                 </Form.Group>
+                                { name.fname !== "" && name.lname !== "" ? (
+                                    <Card.Text>
+                                        Your nickname in the server will be changed to "<span className="font-weight-bold">{name.fname} {name.lname}{name.pronouns !== "" ? ` (${name.pronouns})` : ""}</span>"
+                                    </Card.Text>
+                                ) : ""
+
+                                }
                                 <Button disabled={ name.fname === "" || name.lname === "" } style={{ width: "90%"}} type="submit">Join CS Open Lab!</Button>
                             </Form>
                         </>

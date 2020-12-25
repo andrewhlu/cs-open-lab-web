@@ -87,14 +87,15 @@ export async function addDiscordToUser(uid, user, refreshToken) {
     }, update);
 }
 
-export async function addFirstLastName(uid, fname, lname) {
+export async function addFnameLnamePronouns(uid, fname, lname, pronouns) {
     const client = await initDatabase();
     const sessions = client.collection("users");
 
     const update = {
         $set: {
             fname: fname,
-            lname: lname
+            lname: lname,
+            pronouns: pronouns
         }
     }
 

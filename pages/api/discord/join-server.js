@@ -1,5 +1,5 @@
-import { getSessionUser, addFirstLastName } from "../../../utils/user";
-import { fetch, fetchStatus } from "../../../utils/fetch";
+import { getSessionUser, addFnameLnamePronouns } from "../../../utils/user";
+import { fetch, fetchRaw } from "../../../utils/fetch";
 import config from "../../../utils/config";
 
 export default async function(req, res) {
@@ -8,7 +8,7 @@ export default async function(req, res) {
         return res.end();
     }
 
-    const { fname, lname } = req.body;
+    const { fname, lname, pronouns } = req.body;
     const baseUrl = "https://discord.com/api";
 
     try {
@@ -36,7 +36,7 @@ export default async function(req, res) {
         }
 
         // Save user's first and last name in database
-        await addFirstLastName(session.uid, fname, lname);
+        await addFnameLnamePronouns(session.uid, fname, lname, pronouns);
 
         // Get user object from CS Open Lab Guild
         const guildMemberUrl = `${baseUrl}/guilds/${config.DISCORD_GUILD_ID}/members/${discordId}`;
@@ -56,7 +56,14 @@ export default async function(req, res) {
             isNewGuildMember = true;
         }
 
-        const studentRole = [`${config.DISCORD_STUDENT_ROLE_ID}`];
+        // Add student role
+        let roles = allGuilds?.roles;
+
+        if (Array.isArray(roles) && !roles.includes(`${config.DISCORD_STUDENT_ROLE_ID}`)) {
+            roles.push(`${config.DISCORD_STUDENT_ROLE_ID}`);
+        } else if (!Array.isArray(roles)) {
+            roles = [`${config.DISCORD_STUDENT_ROLE_ID}`];
+        }
 
         // Add the user to the CS Open Lab Guild with the Student role
         const addMemberUrl = `${baseUrl}/guilds/${config.DISCORD_GUILD_ID}/members/${discordId}`;
@@ -69,13 +76,17 @@ export default async function(req, res) {
             },
             body: JSON.stringify({
                 access_token: accessToken,
-                nick: `${fname} ${lname}`,
-                roles: Array.isArray(allGuilds?.roles) ? allGuilds.roles.concat(studentRole) : studentRole
+                nick: `${fname} ${lname}${pronouns ? ` (${pronouns})` : ""}`,
+                roles: roles
             })
         };
 
-        const addStatus = await fetchStatus(addMemberUrl, addMemberOptions);
-        if ((addStatus !== 201 && isNewGuildMember) || (addStatus !== 204 && !isNewGuildMember)) {
+        console.log(addMemberOptions)
+
+        const addResponse = await fetchRaw(addMemberUrl, addMemberOptions);
+        console.log("status " + addResponse.status)
+        if (addResponse.status !== (isNewGuildMember ? 201 : 204)) {
+            console.log(addResponse.json())
             throw "Failed to add user to CS Open Lab server";
         }
 

@@ -12,10 +12,10 @@ export async function fetchXml(url, options) {
   return response.text();
 }
 
-export async function fetchStatus(url, options) {
+export async function fetchRaw(url, options) {
   const response = await unfetch(url, options);
 
-  return response.status;
+  return response;
 }
 
 export async function fetchWithToken(url, token, options) {
