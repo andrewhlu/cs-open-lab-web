@@ -1,7 +1,6 @@
 import config from "./config";
 import { fetch } from "./fetch";
 import { getSessionUser } from "./user";
-// import crypto from 'crypto';
 import absoluteUrl from 'next-absolute-url';
 
 const contexts = {
@@ -34,9 +33,6 @@ export async function startAuth(context, req, res, sessionCookie) {
         throw "An invalid OAuth context was provided";
     }
 
-    // let state = crypto.randomBytes(16).toString('base64').slice(0, 16).replace(/[/+]/g, "");
-    // await setData("state/" + state, context);
-
     const { origin } = absoluteUrl(req, 'localhost:3000');
 
     const urlParams = {
@@ -65,13 +61,9 @@ export async function callbackAuth(context, req) {
 
     const session = await getSessionUser(state);
 
-    // let stateDb = await getData("state/" + state);
-
     if(!session) {
         throw "An invalid state was received";
     }
-
-    // await setData("state/" + state, null);
 
     const { origin } = absoluteUrl(req, 'localhost:3000');
 

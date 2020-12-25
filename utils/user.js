@@ -22,7 +22,7 @@ export async function getSessionUser(sessionCookie) {
         },
         {
             $match: {
-                _id: ObjectId(sessionCookie),
+                state: sessionCookie,
             },
         }
     ];

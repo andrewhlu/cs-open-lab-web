@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import { initDatabase, serializeDocument } from "./mongodb";
 import { getSessionUser } from "./user";
 import { updateDiscordUser } from "./discord";
+import crypto from 'crypto';
 
 export async function getSession(req, res) {
     const client = await initDatabase();
@@ -14,7 +15,9 @@ export async function getSession(req, res) {
     let session = null;
 
     if (req.headers.cookie?.indexOf("SessionId") >= 0) {
-        sessionCookie = req.headers.cookie?.substr(req.headers.cookie?.indexOf("SessionId") + 10, 24);
+        req.headers.cookie += ";";
+        let cookieIndex = req.headers.cookie.indexOf("SessionId");
+        sessionCookie = req.headers.cookie?.substring(cookieIndex + 10, req.headers.cookie?.indexOf(";", cookieIndex));
     }
 
     if (sessionCookie) {
@@ -42,13 +45,16 @@ export async function getSession(req, res) {
     if (!session) {
         console.log("No Session ID present");
 
+        // Generate new session cookie
+        sessionCookie = crypto.randomBytes(16).toString('hex')
+
         session = {
+            state: sessionCookie,
             expires: expiryDate.getTime()
         };
 
         const result = await sessions.insertOne(session);
         session._id = result.insertedId;
-        sessionCookie = result.insertedId;
     }
 
     res.setHeader("Set-Cookie", `SessionId=${sessionCookie}; Path=/; Expires=${expiryDate.toUTCString()}; HttpOnly; SameSite;`);
@@ -67,7 +73,7 @@ export async function addUidToSession(uid, sessionCookie) {
     }
 
     return await sessions.updateOne({ 
-        _id: ObjectId(sessionCookie)
+        state: sessionCookie
     }, update);
 }
 
@@ -76,7 +82,7 @@ export async function deleteSession(sessionCookie) {
     const sessions = client.collection("sessions");
     
     return await sessions.deleteOne({
-        _id: ObjectId(sessionCookie)
+        state: sessionCookie
     });
 }
 
@@ -91,6 +97,6 @@ export async function addDiscordAccessTokenToSession(accessToken, sessionCookie)
     }
 
     return await sessions.updateOne({ 
-        _id: ObjectId(sessionCookie)
+        state: sessionCookie
     }, update);
 }
