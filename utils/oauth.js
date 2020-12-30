@@ -9,7 +9,7 @@ const contexts = {
         tokenUri: "https://discord.com/api/oauth2/token",
         clientId: config.DISCORD_CLIENT_ID,
         clientSecret: config.DISCORD_CLIENT_SECRET,
-        scopes: "email identify guilds guilds.join",
+        scopes: "email identify guilds.join",
         tokenAuthInBody: true,
     },
     bot: {

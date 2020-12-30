@@ -56,6 +56,19 @@ export async function createUser(user) {
     return users.insertOne(user);
 }
 
+export async function updateUserFromSSO(uid, user) {
+    const client = await initDatabase();
+    const sessions = client.collection("users");
+
+    const update = {
+        $set: user
+    }
+
+    return await sessions.updateOne({ 
+        _id: ObjectId(uid)
+    }, update);
+}
+
 export async function getUserFromDiscordId(discordId) {
     const client = await initDatabase();
     const users = client.collection("users");

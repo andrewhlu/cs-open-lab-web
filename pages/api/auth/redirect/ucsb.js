@@ -1,4 +1,4 @@
-import { createUser, getSessionUser, getUserFromCampusId } from "../../../../utils/user";
+import { createUser, getSessionUser, getUserFromCampusId, getUserFromUid, updateUserFromSSO } from "../../../../utils/user";
 import { fetchXml } from "../../../../utils/fetch";
 import { addUidToSession } from "../../../../utils/session";
 import absoluteUrl from 'next-absolute-url';
@@ -28,6 +28,15 @@ export default async function completeAuth(req, res) {
                     const createResponse = await createUser(response.user);
                     databaseUser = response.user;
                     databaseUser._id = createResponse.insertedId;
+                } else {
+                    // Update user
+                    if (databaseUser?.fname !== null || databaseUser?.lname !== null) {
+                        delete response.user.fname;
+                        delete response.user.lname;
+                    }
+
+                    await updateUserFromSSO(databaseUser._id, response.user);
+                    databaseUser = await getUserFromUid(databaseUser._id);
                 }
 
                 // Attach user ID to session
@@ -92,6 +101,8 @@ function parseUserFromXml(xml) {
             user.lname = attributes["cas:sn"]?.["_text"]; // may be null
             user.email = attributes["cas:mail"]?.["_text"];
             user.campusId = attributes["cas:ucsbCampusID"]?.["_text"];
+            user.affiliations = [];
+            attributes["cas:ucsbAffiliation"].map(a => user.affiliations.push(a["_text"]));
         }
 
         return {

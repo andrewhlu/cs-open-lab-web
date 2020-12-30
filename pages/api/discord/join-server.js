@@ -76,7 +76,7 @@ export default async function(req, res) {
             },
             body: JSON.stringify({
                 access_token: accessToken,
-                nick: `${fname} ${lname}${pronouns ? ` (${pronouns})` : ""}`,
+                nick: `${fname} ${lname}${pronouns ? ` (${pronouns})` : ""}`.replace(/^\s+|\s+$|\s+(?=\s)/g, ""),
                 roles: roles
             })
         };
