@@ -88,13 +88,13 @@ function JoinServer(props) {
                                 { renderNickname().length > 32 && (
                                     <Card.Text className="text-danger">Your nickname is over the 32 character limit. Please shorten your nickname.</Card.Text>
                                 )}
-                                <Button disabled={ user.fname === "" || user.lname === "" || renderNickname().length > 32 } style={{ width: "90%"}} type="submit">Join CS Open Lab!</Button>
+                                <Button disabled={ user.fname === "" || user.lname === "" || renderNickname().length > 32 } style={{ width: "90%" }} type="submit">Join CS Open Lab!</Button>
                             </Form>
                         </>
                     ) : (
                         <>
                             <Card.Text>You must sign in to UCSB and link your Discord before you can proceed to this step.</Card.Text>
-                            <Button disabled style={{ width: "90%"}}>Join CS Open Lab!</Button>
+                            <Button disabled style={{ width: "90%" }}>Join CS Open Lab!</Button>
                         </>
                     )}
                 </Card.Body>
