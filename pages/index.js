@@ -26,8 +26,8 @@ function HomePage(props) {
   return (
     <>
       <Head>
-        <title>CS Open Lab Concept</title>
-        <meta property="og:title" content="CS Open Lab Concept" key="title" />
+        <title>UCSB CS Open Lab</title>
+        <meta property="og:title" content="UCSB CS Open Lab" key="title" />
       </Head>
       <Layout session={props.session} alert={props.query?.error} rules={props.rules}>
         { props.debug ?
