@@ -6,7 +6,7 @@ export async function fetch(url, options) {
   return response.json();
 }
 
-export async function fetchXml(url, options) {
+export async function fetchText(url, options) {
   const response = await unfetch(url, options);
 
   return response.text();

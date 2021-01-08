@@ -4,6 +4,7 @@ import Header from "./Header";
 import UCSB from "./UCSB";
 import Discord from "./Discord";
 import JoinServer from "./JoinServer";
+import Rules from "./Rules";
 
 function Layout(props) {
   const [alert, setAlert] = useState({
@@ -12,17 +13,16 @@ function Layout(props) {
   });
 
   return (
-    <>
-      <Container>
-        <Header alert={alert}></Header>
-        <Row xs={1} lg={3} style={{ padding: "0.5em" }}>
-          <UCSB session={props.session}></UCSB>
-          <Discord session={props.session}></Discord>
-          <JoinServer session={props.session} setAlert={setAlert}></JoinServer>
-        </Row>
-        {props.children}
-      </Container>
-    </>
+    <Container>
+      <Header alert={alert} />
+      <Row xs={1} lg={3} style={{ padding: "0.5em" }}>
+        <UCSB session={props.session} />
+        <Discord session={props.session} />
+        <JoinServer session={props.session} setAlert={setAlert} />
+      </Row>
+      <Rules rules={props.rules}/>
+      {props.children}
+    </Container>
   );
 }
 

@@ -1,5 +1,5 @@
 import { createUser, getSessionUser, getUserFromCampusId, getUserFromUid, updateUserFromSSO } from "../../../../utils/user";
-import { fetchXml } from "../../../../utils/fetch";
+import { fetchText } from "../../../../utils/fetch";
 import { addUidToSession } from "../../../../utils/session";
 import absoluteUrl from 'next-absolute-url';
 import xml2js from "xml-js";
@@ -71,7 +71,7 @@ export default async function completeAuth(req, res) {
 
 async function validateTicket(req, ticket) {
     const { origin } = absoluteUrl(req, 'localhost:3000');
-    const response = await fetchXml(`https://sso.ucsb.edu/cas/p3/serviceValidate?service=${encodeURIComponent(`${origin}/api/auth/redirect/ucsb`)}&ticket=${ticket}`);
+    const response = await fetchText(`https://sso.ucsb.edu/cas/p3/serviceValidate?service=${encodeURIComponent(`${origin}/api/auth/redirect/ucsb`)}&ticket=${ticket}`);
     return parseUserFromXml(response);
 }
 
